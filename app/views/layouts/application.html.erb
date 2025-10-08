@@ -22,16 +22,22 @@
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
   </head>
 
-  <body class="bg-gray-100 text-gray-800">
-    <nav class="bg-gray-800 p-4 text-white flex justify-between">
-      <h1 class="text-xl font-semibold">ToDo List</h1>
+   <body class="bg-gray-100 text-gray-800">
+    <nav class="bg-gray-800 p-4 text-white flex justify-between items-center">
+      <%= link_to "🗒️ My ToDo App", root_path, class: "text-xl font-semibold hover:underline" %>
+
       <div>
         <% if user_signed_in? %>
-          <span class="mr-3">Hello, <%= current_user.email %></span>
-          <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "underline" %>
+          <span class="mr-3">👋 <%= current_user.email %></span>
+
+          <%= button_to "Logout",
+              destroy_user_session_path,
+              method: :delete,
+              class: "bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700",
+              form: { "data-turbo-confirm": "Are you sure you want to log out?" } %>
         <% else %>
-          <%= link_to "Login", new_user_session_path, class: "underline mr-3" %>
-          <%= link_to "Sign up", new_user_registration_path, class: "underline" %>
+          <%= link_to "Login", new_user_session_path, class: "bg-blue-600 text-white px-4 py-2 rounded mr-2 hover:bg-blue-700" %>
+          <%= link_to "Sign up", new_user_registration_path, class: "bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700" %>
         <% end %>
       </div>
     </nav>
@@ -43,6 +49,7 @@
       <% if alert %>
         <div class="bg-red-100 text-red-800 p-3 rounded mb-4"><%= alert %></div>
       <% end %>
+
       <%= yield %>
     </main>
   </body>

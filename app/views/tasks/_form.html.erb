@@ -1,0 +1,24 @@
+<%= form_with(model: task, class: "space-y-4") do |form| %>
+  <% if task.errors.any? %>
+    <div class="bg-red-100 text-red-800 p-3 rounded">
+      <h2><%= pluralize(task.errors.count, "error") %> prohibited this task from being saved:</h2>
+      <ul>
+        <% task.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :title, class: "block font-semibold mb-2" %>
+    <%= form.text_field :title, class: "w-full border border-gray-300 rounded p-2" %>
+  </div>
+
+  <div>
+    <%= form.label :description, class: "block font-semibold mb-2" %>
+    <%= form.text_area :description, class: "w-full border border-gray-300 rounded p-2" %>
+  </div>
+
+  <%= form.submit class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" %>
+<% end %>

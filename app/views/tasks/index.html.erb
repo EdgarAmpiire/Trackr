@@ -3,21 +3,7 @@
   <%= link_to "New Task", new_task_path, class: "bg-blue-600 text-white px-4 py-2 rounded" %>
 </div>
 
-<div class="grid gap-4">
-  <% @tasks.each do |task| %>
-    <div class="bg-white shadow p-4 rounded flex justify-between items-center">
-      <div>
-        <h3 class="text-lg font-semibold <%= 'line-through text-gray-400' if task.completed %>">
-          <%= link_to task.title, task %>
-        </h3>
-        <p class="text-sm text-gray-500"><%= truncate(task.description, length: 60) %></p>
-      </div>
-
-      <div class="flex gap-2">
-        <%= button_to "Toggle Complete", toggle_complete_task_path(task), method: :patch, form: { data: { turbo_stream: true } }, class: "bg-green-600 text-white px-3 py-1 rounded" %>
-        <%= link_to "Edit", edit_task_path(task), class: "bg-yellow-500 text-white px-3 py-1 rounded" %>
-        <%= link_to "Delete", task, data: { turbo_confirm: "Are you sure?" }, method: :delete, class: "bg-red-600 text-white px-3 py-1 rounded" %>
-      </div>
-    </div>
-  <% end %>
+<div id="tasks" class="grid gap-4">
+  <%= render @tasks %>
 </div>
+
