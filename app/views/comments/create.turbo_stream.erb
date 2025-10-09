@@ -1,1 +1,2 @@
 <%= turbo_stream.append "comments", partial: "comments/comment", locals: { comment: @comment } %>
+<%= turbo_stream.update "new_comment", partial: "comments/form", locals: { task: @task, comment: Comment.new } %>

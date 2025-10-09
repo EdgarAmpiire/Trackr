@@ -1,7 +1,11 @@
-<div id="<%= dom_id(comment) %>" class="bg-gray-50 border border-gray-200 rounded p-3 mb-2">
-  <p class="font-semibold"><%= comment.user.email %>:</p>
-  <p><%= comment.content %></p>
+<div id="<%= dom_id(comment) %>" class="border-b py-2">
+  <p class="text-sm text-gray-700"><%= comment.content %></p>
+  <p class="text-xs text-gray-400">by <%= comment.user&.name || comment.user&.email %></p>
+
   <% if comment.user == current_user %>
-    <%= link_to "Delete", [comment.task, comment], data: { turbo_confirm: "Delete comment?" }, method: :delete, class: "text-red-500 text-sm" %>
+    <%= button_to "Delete", task_comment_path(comment.task, comment),
+                  method: :delete,
+                  form: { data: { turbo_stream: true } },
+                  class: "text-red-500 text-xs" %>
   <% end %>
 </div>
