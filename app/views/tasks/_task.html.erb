@@ -1,39 +1,47 @@
-<div id="<%= dom_id(task) %>" 
-     class="bg-white shadow p-4 rounded flex justify-between items-center hover:bg-gray-50 transition">
+<%= turbo_frame_tag dom_id(task) do %>
+  <div class="bg-white shadow p-4 rounded flex justify-between items-center hover:bg-gray-50 transition">
+    <div>
+      <!-- Task title -->
+      <h3 class="text-lg font-semibold <%= 'line-through text-gray-400' if task.completed %>">
+        <%= task.title %>
+      </h3>
 
-  <div>
-    <!-- Task title -->
-    <h3 class="text-lg font-semibold <%= 'line-through text-gray-400' if task.completed %>">
-      <%= link_to task.title, task, class: "hover:underline" %>
-    </h3>
+      <!-- Task description -->
+      <% if task.description.present? %>
+        <p class="text-sm text-gray-500">
+          <%= truncate(task.description, length: 60) %>
+        </p>
+      <% end %>
 
-    <!-- Task description -->
-    <% if task.description.present? %>
-      <p class="text-sm text-gray-500">
-        <%= truncate(task.description, length: 60) %>
+      <!-- Added by user -->
+      <p class="text-xs text-gray-400 mt-1">
+        Added by 
+        <%= [task.user&.first_name, task.user&.last_name].compact.join(' ').presence || task.user&.email || "Unknown user" %>
       </p>
-    <% end %>
+    </div>
 
-    <!-- Added by user -->
-    <p class="text-xs text-gray-400 mt-1">
-      Added by <%= task.user&.email || "Unknown user" %>
-    </p>
+    <!-- Buttons -->
+    <div class="flex gap-2">
+      <!-- Mark complete/incomplete -->
+      <%= button_to (task.completed ? "✅ Completed" : "☐ Mark Complete"),
+          toggle_complete_task_path(task),
+          method: :patch,
+          form: { data: { turbo_stream: true } },
+          class: "#{task.completed ? 'bg-gray-500' : 'bg-green-600'} text-white px-3 py-1 rounded hover:opacity-90" %>
+
+      <!-- Edit -->
+      
+          <%= link_to "Edit", edit_task_path(task),
+          data: { turbo_frame: "_top" },
+          class: "bg-yellow-500 text-white px-3 py-1 rounded hover:opacity-90"  %>
+
+
+      <!-- Delete -->
+      <%= button_to "🗑️ Delete",
+          task_path(task),
+          method: :delete,
+          form: { data: { turbo_confirm: 'Are you sure?', turbo_stream: true } },
+          class: "bg-red-600 text-white px-3 py-1 rounded hover:opacity-90" %>
+    </div>
   </div>
-
-  <!-- Buttons -->
-  <div class="flex gap-2">
-    <%= button_to (task.completed ? "Mark Incomplete" : "Mark Complete"),
-      toggle_complete_task_path(task),
-      method: :patch,
-      form: { data: { turbo_stream: true } },
-      class: "#{task.completed ? 'bg-gray-500' : 'bg-green-600'} text-white px-3 py-1 rounded hover:opacity-90" %>
-
-    <%= link_to "Edit", edit_task_path(task),
-      class: "bg-yellow-500 text-white px-3 py-1 rounded hover:opacity-90" %>
-
-    <%= link_to "Delete", task,
-      data: { turbo_confirm: "Are you sure?" },
-      method: :delete,
-      class: "bg-red-600 text-white px-3 py-1 rounded hover:opacity-90" %>
-  </div>
-</div>
+<% end %>

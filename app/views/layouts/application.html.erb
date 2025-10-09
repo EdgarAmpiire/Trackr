@@ -22,17 +22,16 @@
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
   </head>
 
-   <body class="bg-gray-100 text-gray-800">
+  <body class="bg-gray-100 text-gray-800">
     <nav class="bg-gray-800 p-4 text-white flex justify-between items-center">
       <%= link_to "🗒️ Trackr", root_path, class: "text-xl font-semibold hover:underline" %>
 
       <div>
         <% if user_signed_in? %>
-         <span class="mr-3">
-  👋 
-  <%= [current_user.first_name, current_user.last_name].compact.join(' ').presence || current_user.email %>
-</span>
-
+          <span class="mr-3">
+            👋 
+            <%= [current_user.first_name, current_user.last_name].compact.join(' ').presence || current_user.email %>
+          </span>
 
           <%= button_to "Logout",
               destroy_user_session_path,
@@ -45,6 +44,12 @@
         <% end %>
       </div>
     </nav>
+
+    <!-- 🔥 Insert Turbo Frame for dynamic flash updates -->
+    <%= turbo_frame_tag "flash" do %>
+  <%= render "shared/flash" %>
+<% end %>
+
 
     <main class="container mx-auto mt-8 px-4">
       <% if notice %>
