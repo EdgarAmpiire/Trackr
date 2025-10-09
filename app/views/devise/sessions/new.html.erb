@@ -1,26 +1,58 @@
-<h2>Log in</h2>
-
-<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+<div class="min-h-screen bg-gray-100 flex flex-col items-center justify-items-start px-4">
+  <!-- Logo (outside the card) -->
+  <div class="-mb-12 -mt-20">
+    <%= image_tag "trackr.png", alt: "Trackr Logo", class: "h-60 w-auto drop-shadow-lg" %>
   </div>
 
-  <div class="field">
-    <%= f.label :password %><br />
-    <%= f.password_field :password, autocomplete: "current-password" %>
-  </div>
-
-  <% if devise_mapping.rememberable? %>
-    <div class="field">
-      <%= f.check_box :remember_me %>
-      <%= f.label :remember_me %>
-    </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit "Log in" %>
+  <!-- Login Card -->
+  <div class="w-full max-w-md bg-white p-6 rounded-2xl shadow-lg">
+    <h2 class="text-2xl font-bold text-center mb-5 text-gray-800">Welcome back to Trackr</h2>
+<% if resource.errors.any? %>
+  <div class="mb-4 p-4 border-l-4 border-red-600 bg-red-100 text-red-800 rounded">
+    <h4 class="font-semibold mb-2">Oops! </h4>
+    <ul class="list-disc list-inside space-y-1">
+      <% resource.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
   </div>
 <% end %>
 
-<%= render "devise/shared/links" %>
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+      <div class="mb-3">
+        <%= f.label :email, class: "block text-sm font-medium text-gray-700" %>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email",
+              class: "mt-1 block w-full p-2.5 border border-gray-300 rounded-md focus:ring-green-600 focus:border-green-600 text-sm" %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :password, class: "block text-sm font-medium text-gray-700" %>
+        <%= f.password_field :password, autocomplete: "current-password",
+              class: "mt-1 block w-full p-2.5 border border-gray-300 rounded-md focus:ring-green-600 focus:border-green-600 text-sm" %>
+      </div>
+
+      <% if devise_mapping.rememberable? %>
+        <div class="flex items-center mb-3">
+          <%= f.check_box :remember_me, class: "h-4 w-4 text-green-600 focus:ring-green-600 border-gray-300 rounded" %>
+          <%= f.label :remember_me, class: "ml-2 text-sm text-gray-700" %>
+        </div>
+      <% end %>
+
+      <div class="flex justify-between items-center mb-5">
+        <%= link_to "Forgot your password?", new_password_path(resource_name),
+              class: "text-sm text-green-600 hover:underline" %>
+      </div>
+
+      <div>
+        <%= f.submit "Log in",
+              class: "w-full cursor-pointer bg-green-600 text-white py-2.5 rounded-md hover:bg-green-700 font-semibold text-sm transition" %>
+      </div>
+    <% end %>
+
+    <p class="mt-5 text-center text-sm text-gray-600">
+      Don’t have an account?
+      <%= link_to "Sign up", new_registration_path(resource_name),
+            class: "text-green-600 font-semibold hover:underline" %>
+    </p>
+  </div>
+</div>

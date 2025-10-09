@@ -10,54 +10,44 @@
 
     <%= yield :head %>
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
   </head>
 
-  <body class="bg-gray-100 text-gray-800">
-    <nav class="bg-gray-800 p-4 text-white flex justify-between items-center">
-      <%= link_to "🗒️ Trackr", root_path, class: "text-xl font-semibold hover:underline" %>
+  <body class="bg-gray-100 text-gray-800 font-sans">
+    <% if user_signed_in? %>
+       <nav class="bg-white shadow-md px-14 py-4 flex justify-between items-center sticky top-0 z-50 h-16">
+    <!-- Logo linking to home -->
+    <%= link_to root_path do %>
+      <%= image_tag "trackr_navbar.png", alt: "Trackr Logo", class: "h-10 w-auto drop-shadow-md" %>
+    <% end %>
 
-      <div>
-        <% if user_signed_in? %>
-          <span class="mr-3">
-            👋 
-            <%= [current_user.first_name, current_user.last_name].compact.join(' ').presence || current_user.email %>
-          </span>
+    <div class="flex items-center space-x-4">
+      <span class="text-gray-700 font-medium">
+        👋 <%= [current_user.first_name, current_user.last_name].compact.join(' ').presence || current_user.email %>
+      </span>
 
-          <%= button_to "Logout",
-              destroy_user_session_path,
-              method: :delete,
-              class: "bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700",
-              form: { "data-turbo-confirm": "Are you sure you want to log out?" } %>
-        <% else %>
-          <%= link_to "Login", new_user_session_path, class: "bg-blue-600 text-white px-4 py-2 rounded mr-2 hover:bg-blue-700" %>
-          <%= link_to "Sign up", new_user_registration_path, class: "bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700" %>
-        <% end %>
-      </div>
-    </nav>
+      <%= button_to "Logout",
+            destroy_user_session_path,
+            method: :delete,
+            class: "bg-red-600 cursor-pointer text-white px-3 py-2 rounded-lg hover:bg-red-700 font-medium transition",
+            form: { "data-turbo-confirm": "Are you sure you want to log out?" } %>
+    </div>
+  </nav>
+    <% end %>
 
-    <!-- 🔥 Insert Turbo Frame for dynamic flash updates -->
+    <!-- 🔥 Flash messages -->
     <%= turbo_frame_tag "flash" do %>
-  <%= render "shared/flash" %>
-<% end %>
+      <%= render "shared/flash" %>
+    <% end %>
 
-
+    <!-- Main content -->
     <main class="container mx-auto mt-8 px-4">
-      <% if notice %>
-        <div class="bg-green-100 text-green-800 p-3 rounded mb-4"><%= notice %></div>
-      <% end %>
-      <% if alert %>
-        <div class="bg-red-100 text-red-800 p-3 rounded mb-4"><%= alert %></div>
-      <% end %>
+     
 
       <%= yield %>
     </main>
