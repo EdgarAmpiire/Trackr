@@ -1,7 +1,18 @@
-<div class="bg-white p-6 shadow rounded">
-  <h2 class="text-2xl font-bold mb-4">Edit Task</h2>
-  <%= render "form", task: @task %>
-  <div class="mt-4">
-    <%= link_to "Back", tasks_path, class: "text-blue-600 hover:underline" %>
+<h2 class="text-2xl font-semibold mb-4">Edit Task</h2>
+
+<%= form_with model: @task, local: true do |f| %>
+  <div class="mb-4">
+    <%= f.label :title, class: "block font-medium mb-1" %>
+    <%= f.text_field :title, class: "w-full p-2 border rounded" %>
   </div>
-</div>
+
+  <div class="mb-4">
+    <%= f.label :description, class: "block font-medium mb-1" %>
+    <%= f.text_area :description, class: "w-full p-2 border rounded" %>
+  </div>
+
+  <div class="flex gap-2">
+    <%= f.submit "Update Task", class: "bg-blue-600 text-white px-4 py-2 rounded" %>
+    <%= link_to "Cancel", tasks_path, class: "bg-gray-300 px-4 py-2 rounded" %>
+  </div>
+<% end %>

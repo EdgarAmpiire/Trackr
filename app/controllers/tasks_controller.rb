@@ -21,7 +21,9 @@ class TasksController < ApplicationController
     @task = current_user.tasks.build(task_params)
     if @task.save
       respond_to do |format|
-        format.turbo_stream
+        format.turbo_stream do
+          flash.now[:notice] = "Task created successfully."
+        end
         format.html { redirect_to tasks_path, notice: "Task created successfully." }
       end
     else
@@ -42,15 +44,19 @@ class TasksController < ApplicationController
   def destroy
     @task.destroy
     respond_to do |format|
-      format.turbo_stream
-      format.html { redirect_to tasks_path, notice: "Task deleted." }
+      format.turbo_stream do
+        flash.now[:notice] = "Task deleted successfully."
+      end
+      format.html { redirect_to tasks_path, notice: "Task deleted successfully." }
     end
   end
 
   def toggle_complete
     @task.update(completed: !@task.completed)
     respond_to do |format|
-      format.turbo_stream
+      format.turbo_stream do
+        flash.now[:notice] = @task.completed? ? "Task marked as complete." : "Task marked as incomplete."
+      end
       format.html { redirect_to tasks_path }
     end
   end

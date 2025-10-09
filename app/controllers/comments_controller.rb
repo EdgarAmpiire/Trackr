@@ -17,7 +17,7 @@ class CommentsController < ApplicationController
   end
 
   def destroy
-    @comment = task.comments.find(params[:id])
+    @comment = @task.comments.find(params[:id])
     @comment.destroy
     respond_to do |format|
       format.turbo_stream
