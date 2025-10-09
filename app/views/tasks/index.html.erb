@@ -1,0 +1,9 @@
+<div class="flex justify-between items-center mb-6">
+  <h2 class="text-2xl font-bold">My Tasks</h2>
+  <%= link_to "New Task", new_task_path, class: "bg-blue-600 text-white px-4 py-2 rounded" %>
+</div>
+
+<div id="tasks" class="grid gap-4">
+  <%= render @tasks %>
+</div>
+
