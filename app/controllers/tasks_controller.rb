@@ -1,9 +1,11 @@
 class TasksController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_task, only: [ :show, :edit, :update, :destroy, :toggle_complete ]
+  before_action :set_task, only: [:show, :edit, :update, :destroy, :toggle_complete]
 
   def index
-    @tasks = current_user.tasks.order(created_at: :desc)
+    # All users can see all tasks, ordered by latest first
+    @tasks = Task.order(created_at: :desc)
+    @task = Task.new
   end
 
   def show
@@ -11,13 +13,17 @@ class TasksController < ApplicationController
   end
 
   def new
-    @task = current_user.tasks.build
+    @task = Task.new
   end
 
   def create
+    # Record who created the task
     @task = current_user.tasks.build(task_params)
     if @task.save
-      redirect_to @task, notice: "Task created successfully."
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to tasks_path, notice: "Task created successfully." }
+      end
     else
       render :new, status: :unprocessable_entity
     end
@@ -27,7 +33,7 @@ class TasksController < ApplicationController
 
   def update
     if @task.update(task_params)
-      redirect_to @task, notice: "Task Updated."
+      redirect_to @task, notice: "Task updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -35,7 +41,10 @@ class TasksController < ApplicationController
 
   def destroy
     @task.destroy
-    redirect_to tasks_path, notice: "Task Deleted."
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to tasks_path, notice: "Task deleted." }
+    end
   end
 
   def toggle_complete
@@ -49,10 +58,11 @@ class TasksController < ApplicationController
   private
 
   def set_task
-    @task = current_user.tasks.find(params[:id])
+    # Any user can access any task
+    @task = Task.find(params[:id])
   end
 
   def task_params
-    params.require(:task).permit(:title, :description)
+    params.require(:task).permit(:title, :description, :completed)
   end
 end
