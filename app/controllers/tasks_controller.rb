@@ -23,9 +23,9 @@ class TasksController < ApplicationController
       format.turbo_stream
       format.html { redirect_to @task, notice: "Task created successfully." }
     end
-    else
+  else
     render :new, status: :unprocessable_entity
-    end
+  end
   end
 
   def edit; end
