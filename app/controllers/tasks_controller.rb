@@ -17,17 +17,14 @@ class TasksController < ApplicationController
   end
 
   def create
-    # Record who created the task
-    @task = current_user.tasks.build(task_params)
-    if @task.save
-      respond_to do |format|
-        format.turbo_stream do
-          flash.now[:notice] = "Task created successfully."
-        end
-        format.html { redirect_to tasks_path, notice: "Task created successfully." }
-      end
+  @task = current_user.tasks.build(task_params)
+  if @task.save
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to @task, notice: "Task created successfully." }
+    end
     else
-      render :new, status: :unprocessable_entity
+    render :new, status: :unprocessable_entity
     end
   end
 
