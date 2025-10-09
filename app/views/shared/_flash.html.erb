@@ -1,20 +1,22 @@
-<% flash.each do |type, message| %>
-  <% css_class, icon =
-      case type.to_sym
-      when :notice
-        ["bg-green-100 border-green-300 text-green-800", "✅"]
-      when :alert, :error
-        ["bg-red-100 border-red-300 text-red-800", "⚠️"]
-      else
-        ["bg-gray-100 border-gray-300 text-gray-800", "ℹ️"]
-      end
-  %>
+<!-- Flash container -->
+<div class="fixed top-16 right-4 w-3/12 z-50 space-y-4">
+  <% flash.each do |type, message| %>
+    <% css_class, icon =
+        case type.to_sym
+        when :notice
+          ["bg-green-100 border-green-300 text-green-800"]
+        when :alert, :error
+          ["bg-red-100 border-red-300 text-red-800"]
+        else
+          ["bg-gray-100 border-gray-300 text-gray-800"]
+        end
+    %>
 
-  <div 
-    data-controller="flash" 
-    class="border p-4 rounded-lg mb-4 flex items-center gap-3 shadow-sm animate-fade-in <%= css_class %>"
-  >
-    <span class="text-lg"><%= icon %></span>
-    <p class="flex-1"><%= message %></p>
-  </div>
-<% end %>
+    <div 
+      data-controller="flash" 
+      class="border p-4 rounded-lg flex items-center gap-3 shadow-lg animate-fade-in <%= css_class %>"
+    >
+      <p class="flex-1"><%= message %></p>
+    </div>
+  <% end %>
+</div>
