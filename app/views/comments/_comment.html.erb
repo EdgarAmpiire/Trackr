@@ -1,7 +1,10 @@
 <div id="<%= dom_id(comment) %>" class="border-b py-2">
   <p class="text-sm text-gray-700"><%= comment.content %></p>
-  <p class="text-xs text-gray-400">by <%= comment.user&.name || comment.user&.email %></p>
-
+  <p class="text-xs text-gray-400 mt-1 italic">
+    Added by 
+    <%= [comment.user&.first_name, comment.user&.last_name].compact.join(' ').presence || "Unknown user" %>
+  </p>
+  
   <% if comment.user == current_user %>
     <%= button_to "Delete", task_comment_path(comment.task, comment),
                   method: :delete,

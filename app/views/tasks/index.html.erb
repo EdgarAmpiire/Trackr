@@ -1,9 +1,15 @@
-<div class="flex justify-between items-center mb-6">
-  <h2 class="text-2xl font-bold">My Tasks</h2>
-  <%= link_to "New Task", new_task_path, class: "bg-blue-600 text-white px-4 py-2 rounded" %>
+<div class="flex justify-between items-center mb-6 p-4 bg-white rounded-2xl shadow-md border border-gray-100">
+  <h2 class="text-2xl font-bold text-gray-800">Our Tasks</h2>
+
+  <%= link_to new_task_path, class: "flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-full transition-all duration-300 shadow-md hover:shadow-lg" do %>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5">
+      <path fill-rule="evenodd" d="M12 4.5a.75.75 0 0 1 .75.75v6h6a.75.75 0 0 1 0 1.5h-6v6a.75.75 0 0 1-1.5 0v-6h-6a.75.75 0 0 1 0-1.5h6v-6a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"/>
+    </svg>
+    <span>New Task</span>
+  <% end %>
 </div>
 
-<div id="tasks" class="grid gap-4">
+<div id="tasks" class="grid gap-4 mb-10">
   <%= render @tasks %>
 </div>
 
