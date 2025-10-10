@@ -49,14 +49,18 @@ class TasksController < ApplicationController
   end
 
   def toggle_complete
-    @task.update(completed: !@task.completed)
-    respond_to do |format|
-      format.turbo_stream do
-        flash.now[:notice] = @task.completed? ? "Task marked as complete." : "Task marked as incomplete."
-      end
-      format.html { redirect_to tasks_path }
+  @task.update(completed: !@task.completed)
+
+  respond_to do |format|
+    format.turbo_stream do
+      flash.now[:notice] = @task.completed? ? "Task marked as complete." : "Task marked as incomplete."
+      render turbo_stream: turbo_stream.replace(@task, partial: "tasks/task", locals: { task: @task })
     end
+
+    format.html { redirect_to tasks_path, notice: flash.now[:notice] }
   end
+end
+
 
   private
 

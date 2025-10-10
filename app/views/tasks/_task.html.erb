@@ -1,73 +1,80 @@
 <%= turbo_frame_tag dom_id(task) do %>
-  <div class="bg-white rounded-2xl shadow-md p-6 flex justify-between items-center hover:shadow-lg transition-shadow duration-300 border border-gray-100">
+  <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-6 flex justify-between items-center 
+              hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 ease-in-out
+              <%= 'opacity-90 bg-gradient-to-r from-gray-50 to-green-50' if task.completed %>">
+              
+    <!-- Task Info -->
     <div class="flex flex-col gap-2">
-      <!-- Task title -->
-      <h3 class="text-lg font-semibold <%= 'line-through text-gray-400' if task.completed %>">
-        <%= link_to task.title, task_path(task), data: { turbo_frame: "_top" }, class: "hover:text-green-600 transition-colors duration-200" %>
+      <!-- Title -->
+      <h3 class="text-lg font-semibold transition-all duration-300 
+                 <%= task.completed ? 'line-through text-gray-400' : 'text-gray-800 hover:text-green-700' %>">
+        <%= link_to task.title, task_path(task), data: { turbo_frame: "_top" }, class: "transition-colors duration-300" %>
       </h3>
 
-      <!-- Task description -->
+      <!-- Description -->
       <% if task.description.present? %>
-        <p class="text-sm text-gray-500 truncate max-w-md">
+        <p class="text-sm text-gray-500 leading-snug max-w-md">
           <%= truncate(task.description, length: 60) %>
         </p>
       <% end %>
 
-      <!-- Added by user -->
-      <p class="text-xs text-gray-400 mt-1 italic">
+      <!-- Added by -->
+      <p class="text-xs text-gray-400 italic">
         Added by
         <%= [task.user&.first_name, task.user&.last_name].compact.join(' ').presence || task.user&.email || "Unknown user" %>
       </p>
     </div>
 
-    <!-- Buttons -->
-    <div class="flex gap-3">
-      <!-- Mark complete/incomplete -->
-     <!-- Mark complete/incomplete -->
-<%= button_to toggle_complete_task_path(task),
-    method: :patch,
-    form: { data: { turbo_stream: true } },
-    class: "cursor-pointer flex items-center justify-center p-2 rounded-full transition-all duration-300 hover:scale-110",
-    title: (task.completed ? "Mark Incomplete" : "Mark Complete") do %>
+    <!-- Action Buttons -->
+    <div class="flex gap-3 items-center">
+      
+      <!-- Toggle Complete -->
+      <%= button_to toggle_complete_task_path(task),
+          method: :patch,
+          form: { data: { turbo_stream: true } },
+          class: "cursor-pointer flex items-center justify-center p-2.5 rounded-full border transition-all duration-300 
+                  hover:scale-110 hover:shadow-md
+                  #{task.completed ? 'bg-green-100 border-green-300 text-green-600' : 'bg-gray-100 border-gray-200 text-gray-700'}",
+          title: (task.completed ? "Mark Incomplete" : "Mark Complete") do %>
 
-  <%= raw <<~SVG
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6 #{task.completed ? 'text-green-500' : 'text-gray-600'}">
-      <path fill-rule="evenodd" d="M9 1.5H5.625c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5Zm6.61 10.936a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 14.47a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/>
-      <path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z"/>
-    </svg>
-  SVG
-  %>
-<% end %>
+        <%= raw <<~SVG
+          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24"
+               class="h-5 w-5 transition-colors duration-300 #{task.completed ? 'text-green-600' : 'text-gray-600'}">
+            <path fill-rule="evenodd" d="M9 1.5H5.625c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5Zm6.61 10.936a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 14.47a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/>
+            <path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z"/>
+          </svg>
+        SVG
+        %>
+      <% end %>
 
-<!-- Edit -->
-<%= link_to edit_task_path(task),
-    data: { turbo_frame: "_top" },
-    class: "flex items-center justify-center p-2 rounded-full transition-all duration-300 hover:scale-110",
-    title: "Edit Task" do %>
+      <!-- Edit -->
+      <%= link_to edit_task_path(task),
+          data: { turbo_frame: "_top" },
+          class: "flex items-center justify-center p-2.5 rounded-full border border-yellow-300 bg-yellow-50 text-yellow-600 
+                  hover:bg-yellow-100 hover:scale-110 hover:shadow-md transition-all duration-300",
+          title: "Edit Task" do %>
+        <%= raw <<~SVG
+          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="h-5 w-5">
+            <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
+          </svg>
+        SVG
+        %>
+      <% end %>
 
-  <%= raw <<~SVG
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6 text-yellow-500">
-      <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
-      <path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
-    </svg>
-  SVG
-  %>
-<% end %>
-
-<!-- Delete -->
-<%= button_to task_path(task),
-    method: :delete,
-    form: { data: { turbo_confirm: 'Are you sure?', turbo_stream: true } },
-    class: "cursor-pointer flex items-center justify-center p-2 rounded-full transition-all duration-300 hover:scale-110",
-    title: "Delete Task" do %>
-
-  <%= raw <<~SVG
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6 text-red-500">
-      <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd"/>
-    </svg>
-  SVG
-  %>
-<% end %>
+      <!-- Delete -->
+      <%= button_to task_path(task),
+          method: :delete,
+          form: { data: { turbo_confirm: 'Are you sure?', turbo_stream: true } },
+          class: "cursor-pointer flex items-center justify-center p-2.5 rounded-full border border-red-300 bg-red-50 text-red-600
+                  hover:bg-red-100 hover:scale-110 hover:shadow-md transition-all duration-300",
+          title: "Delete Task" do %>
+        <%= raw <<~SVG
+          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="h-5 w-5">
+            <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Z" clip-rule="evenodd"/>
+          </svg>
+        SVG
+        %>
+      <% end %>
 
     </div>
   </div>
