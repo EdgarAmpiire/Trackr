@@ -14,6 +14,7 @@ class TasksController < ApplicationController
 
   def new
     @task = Task.new
+    @all_operators = [ "John Doe", "Jane Smith", "Michael", "Sarah" ] # example names
   end
 
   def create
@@ -28,7 +29,9 @@ class TasksController < ApplicationController
   end
   end
 
-  def edit; end
+  def edit
+   @all_operators = [ "John Doe", "Jane Smith", "Michael", "Sarah" ] # same here
+  end
 
   def update
     if @task.update(task_params)

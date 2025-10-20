@@ -11,24 +11,6 @@
   <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-100">
     <h2 class="text-3xl font-bold text-gray-800 mb-6">Edit Task</h2>
 
-    <%= form_with model: @task, local: true, class: "space-y-6" do |f| %>
-      <!-- Title Field -->
-      <div>
-        <%= f.label :title, class: "block font-semibold mb-2 text-gray-700" %>
-        <%= f.text_field :title, class: "w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200" %>
-      </div>
-
-      <!-- Description Field -->
-      <div>
-        <%= f.label :description, class: "block font-semibold mb-2 text-gray-700" %>
-        <%= f.text_area :description, class: "w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200", rows: 5 %>
-      </div>
-
-      <!-- Buttons -->
-      <div class="flex gap-3">
-        <%= f.submit "Update Task", class: "cursor-pointer bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-200 shadow" %>
-        <%= link_to "Cancel", tasks_path, class: "cursor-pointer bg-gray-200 text-gray-700 px-5 py-2 rounded-lg font-semibold hover:bg-gray-300 transition-colors duration-200 shadow" %>
-      </div>
-    <% end %>
+    <%= render "form", task: @task %>
   </div>
 </div>
