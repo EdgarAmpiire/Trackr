@@ -12,17 +12,123 @@
     </div>
   <% end %>
 
+  <!-- Title -->
   <div>
     <%= form.label :title, class: "block font-semibold mb-2 text-gray-700" %>
-    <%= form.text_field :title, class: "w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 shadow-sm" %>
+    <%= form.text_field :title,
+        class: "w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 shadow-sm" %>
   </div>
 
+  <!-- Description -->
   <div>
     <%= form.label :description, class: "block font-semibold mb-2 text-gray-700" %>
-    <%= form.text_area :description, class: "w-full border border-gray-300 rounded-xl p-3 h-32 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 shadow-sm" %>
+    <%= form.text_area :description,
+        class: "w-full border border-gray-300 rounded-xl p-3 h-32 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 shadow-sm" %>
   </div>
 
-  <div>
-    <%= form.submit "Create Task", class: "cursor-pointer bg-green-600 text-white px-5 py-2 rounded-xl font-semibold hover:bg-green-700 transition-all duration-200 shadow-md" %>
+<!-- Operators Section -->
+<div>
+  <h3 class="font-semibold text-gray-700 mb-2">Operators</h3>
+
+  <!-- Existing operators (from DB) -->
+  <%= form.fields_for :operators do |operator_fields| %>
+  <div class="flex items-center gap-3 mb-2 operator-field">
+    <%= operator_fields.text_field :name,
+        placeholder: "Operator name",
+        class: "w-full border border-gray-300 rounded-xl p-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 shadow-sm" %>
+    <%= operator_fields.hidden_field :_destroy, class: "destroy-flag" %>
+    <%= link_to "Remove", "#", class: "text-red-600 text-sm hover:underline remove-operator" %>
   </div>
 <% end %>
+
+
+  <!-- Dropdown for selecting from predefined operators -->
+  <div class="flex items-center gap-3 mb-2">
+    <%= select_tag "operator_select",
+        options_for_select(@all_operators),
+        prompt: "Select operator",
+        class: "border border-gray-300 rounded-xl p-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 shadow-sm" %>
+    <button type="button" id="add-operator-dropdown"
+      class="bg-green-100 text-green-700 px-4 py-2 rounded-lg hover:bg-green-200 font-medium transition-all duration-200 shadow-sm">
+      Add
+    </button>
+  </div>
+
+  <!-- Optional new operator manually -->
+  <div class="flex items-center gap-3 mb-2">
+    <input type="text" id="new-operator" placeholder="Enter new operator"
+      class="w-full border border-gray-300 rounded-xl p-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 shadow-sm">
+    <button type="button" id="add-operator-new"
+      class="bg-green-100 text-green-700 px-4 py-2 rounded-lg hover:bg-green-200 font-medium transition-all duration-200 shadow-sm">
+      Add
+    </button>
+  </div>
+</div>
+
+
+  <!-- Submit -->
+  <div>
+    <%= form.submit task.persisted? ? "Update Task" : "Create Task",
+  class: "cursor-pointer bg-green-600 text-white px-5 py-2 rounded-xl font-semibold hover:bg-green-700 transition-all duration-200 shadow-md" %>
+ </div>
+<% end %>
+
+<!-- Stimulus/JS helper for dynamically adding operator fields -->
+<script>
+document.addEventListener("turbo:load", () => {
+  const operatorContainer = document.querySelector("#operators-container") || document.createElement("div");
+
+  // Add from dropdown
+  document.getElementById("add-operator-dropdown")?.addEventListener("click", () => {
+    const select = document.getElementById("operator_select");
+    const value = select.value;
+    if (!value) return;
+
+    const index = Date.now();
+    const newField = document.createElement("div");
+    newField.classList.add("flex", "items-center", "gap-3", "mb-2");
+    newField.innerHTML = `
+      <input type="text" name="task[operators_attributes][${index}][name]" value="${value}" readonly
+             class="w-full border border-gray-300 rounded-xl p-2 bg-gray-100">
+      <a href="#" class="text-red-600 text-sm hover:underline remove-operator">Remove</a>
+    `;
+    select.closest("div").before(newField);
+  });
+
+  // Add from manual input
+  document.getElementById("add-operator-new")?.addEventListener("click", () => {
+    const input = document.getElementById("new-operator");
+    const value = input.value.trim();
+    if (!value) return;
+
+    const index = Date.now();
+    const newField = document.createElement("div");
+    newField.classList.add("flex", "items-center", "gap-3", "mb-2");
+    newField.innerHTML = `
+      <input type="text" name="task[operators_attributes][${index}][name]" value="${value}" 
+             class="w-full border border-gray-300 rounded-xl p-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 shadow-sm">
+      <a href="#" class="text-red-600 text-sm hover:underline remove-operator">Remove</a>
+    `;
+    input.closest("div").before(newField);
+    input.value = "";
+  });
+
+  // Remove operator
+  document.addEventListener("click", (e) => {
+  if (e.target.classList.contains("remove-operator")) {
+    e.preventDefault();
+    const operatorField = e.target.closest(".operator-field");
+    const destroyInput = operatorField.querySelector(".destroy-flag");
+
+    if (destroyInput) {
+      destroyInput.value = "1";
+      operatorField.style.display = "none"; // hide but keep in DOM for Rails
+    } else {
+      operatorField.remove(); // for newly added (unsaved) operators
+    }
+  }
+});
+
+});
+</script>
+
