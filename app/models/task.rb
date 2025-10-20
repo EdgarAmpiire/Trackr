@@ -1,6 +1,9 @@
 class Task < ApplicationRecord
   belongs_to :user, optional: true
   has_many :comments, dependent: :destroy
+  has_many :operators, dependent: :destroy
+
+  accepts_nested_attributes_for :operators, allow_destroy: true
 
   validates :title, presence: true
 

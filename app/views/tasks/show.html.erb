@@ -58,6 +58,20 @@
   <p class="text-gray-700 leading-relaxed mb-4 border-l-4 border-green-500 pl-4">
     <%= @task.description.presence || "No description provided." %>
   </p>
+
+  <!-- Operators Section -->
+  <div class="border-t border-gray-200 pt-4 mt-4">
+    <h3 class="text-lg font-semibold text-gray-800 mb-2">Operators</h3>
+    <% if @task.operators.any? %>
+      <ul class="list-disc list-inside text-gray-700 space-y-1">
+        <% @task.operators.each do |operator| %>
+          <li><%= operator.name %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="text-gray-500 italic">No operators assigned.</p>
+    <% end %>
+  </div>
 </div>
 
 <!-- Comments Section -->
