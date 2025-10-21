@@ -23,12 +23,27 @@
       </p>
     </div>
 
+    <div class="flex gap-2 items-center">
+    <!-- Edit Task Button -->
+    <%= link_to edit_task_path(@task),
+        class: "cursor-pointer flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm bg-blue-600 text-black hover:bg-blue-700 transition-all duration-200 shadow-sm hover:shadow-lg" do %>
+      <%= raw <<~SVG
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6 text-yellow-500">
+      <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
+      <path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
+    </svg>
+  SVG
+  %> <span class="">
+      Edit Task
+      </span>
+    <% end %>
+
     <!-- Completion Button -->
     <%= button_to toggle_complete_task_path(@task),
         method: :patch,
         form: { data: { turbo_stream: true } },
         class: "cursor-pointer flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 shadow-sm
-                #{@task.completed ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" do %>
+                #{@task.completed ? 'bg-green-600 text-white hover:bg-green-700' : ' text-black hover:shadow-lg'}" do %>
     
       <%= raw('<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-5 h-5" viewBox="0 0 24 24">
                 <path fill-rule="evenodd" d="M9 1.5H5.625c-1.036 0-1.875.84-1.875 
@@ -53,6 +68,7 @@
       <%= @task.completed ? "Mark Incomplete" : "Mark Complete" %>
     <% end %>
   </div>
+  </div>
 
   <!-- Task Description -->
   <p class="text-gray-700 leading-relaxed mb-4 border-l-4 border-green-500 pl-4">
@@ -60,19 +76,39 @@
   </p>
 
   <!-- Operators Section -->
-  <div class="border-t border-gray-200 pt-4 mt-4">
-    <h3 class="text-lg font-semibold text-gray-800 mb-2">Operators</h3>
-    <% if @task.operators.any? %>
-      <ul class="list-disc list-inside text-gray-700 space-y-1">
-        <% @task.operators.each do |operator| %>
-          <li><%= operator.name %></li>
-        <% end %>
-      </ul>
-    <% else %>
-      <p class="text-gray-500 italic">No operators assigned.</p>
-    <% end %>
-  </div>
+<div class="mt-6">
+  <h3 class="text-lg font-semibold text-gray-800 mb-3">
+    Operators (<%= @task.operators.count %>)
+  </h3>
+
+  <% if @task.operators.any? %>
+    <ul class="space-y-2">
+      <% @task.operators.each do |operator| %>
+        <li class="flex justify-between items-center bg-white p-3">
+          <!-- Operator Name -->
+          <span class="font-medium text-gray-800"> •
+            <%= operator.name.presence || "Unnamed Operator" %>
+            <span class="text-gray-400" >|</span>
+            <!-- Operator Role -->
+          <% if operator.role.present? %>
+            <span class="text-sm text-green-600 font-semibold italic">
+              <%= operator.role %>
+            </span>
+          <% else %>
+            <span class="text-sm text-gray-400 italic">
+              No role assigned
+            </span>
+          <% end %>
+          </span>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="text-gray-500 italic">No operators assigned to this task yet.</p>
+  <% end %>
 </div>
+
+
 
 <!-- Comments Section -->
 <div class="max-w-3xl mx-auto mt-8">

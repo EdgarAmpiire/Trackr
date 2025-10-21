@@ -33,13 +33,23 @@
   <!-- Existing operators (from DB) -->
   <%= form.fields_for :operators do |operator_fields| %>
   <div class="flex items-center gap-3 mb-2 operator-field">
+    <!-- Operator name -->
     <%= operator_fields.text_field :name,
         placeholder: "Operator name",
-        class: "w-full border border-gray-300 rounded-xl p-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 shadow-sm" %>
+        class: "flex-1 border border-gray-300 rounded-xl p-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 shadow-sm" %>
+
+    <!-- Operator role dropdown -->
+    <%= operator_fields.select :role,
+        options_for_select(["Photographer", "Videographer", "Editor", "Producer", "Assistant"], operator_fields.object.role),
+        { prompt: "Select role" },
+        class: "border border-gray-300 rounded-xl p-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 shadow-sm" %>
+
+    <!-- Remove button -->
     <%= operator_fields.hidden_field :_destroy, class: "destroy-flag" %>
     <%= link_to "Remove", "#", class: "text-red-600 text-sm hover:underline remove-operator" %>
   </div>
 <% end %>
+
 
 
   <!-- Dropdown for selecting from predefined operators -->
@@ -66,11 +76,17 @@
 </div>
 
 
-  <!-- Submit -->
-  <div>
+    <!-- Submit & Cancel -->
+  <div class="flex gap-3">
     <%= form.submit task.persisted? ? "Update Task" : "Create Task",
-  class: "cursor-pointer bg-green-600 text-white px-5 py-2 rounded-xl font-semibold hover:bg-green-700 transition-all duration-200 shadow-md" %>
- </div>
+      class: "cursor-pointer bg-green-600 text-white px-5 py-2 rounded-xl font-semibold hover:bg-green-700 transition-all duration-200 shadow-md" %>
+
+    <%= link_to (task.persisted? ? task_path(task) : tasks_path),
+        class: "bg-gray-200 text-gray-700 px-5 py-2 rounded-xl font-semibold hover:bg-gray-300 transition-all duration-200 shadow-md flex items-center justify-center", data: { turbo: false } do %>
+      Cancel
+    <% end %>
+  </div>
+
 <% end %>
 
 <!-- Stimulus/JS helper for dynamically adding operator fields -->
@@ -78,7 +94,7 @@
 document.addEventListener("turbo:load", () => {
   const operatorContainer = document.querySelector("#operators-container") || document.createElement("div");
 
-  // Add from dropdown
+  // ✅ Add from dropdown (REPLACE this whole section)
   document.getElementById("add-operator-dropdown")?.addEventListener("click", () => {
     const select = document.getElementById("operator_select");
     const value = select.value;
@@ -86,16 +102,27 @@ document.addEventListener("turbo:load", () => {
 
     const index = Date.now();
     const newField = document.createElement("div");
-    newField.classList.add("flex", "items-center", "gap-3", "mb-2");
+    newField.classList.add("flex", "items-center", "gap-3", "mb-2", "operator-field");
     newField.innerHTML = `
       <input type="text" name="task[operators_attributes][${index}][name]" value="${value}" readonly
-             class="w-full border border-gray-300 rounded-xl p-2 bg-gray-100">
+             class="flex-1 border border-gray-300 rounded-xl p-2 bg-gray-100">
+
+      <select name="task[operators_attributes][${index}][role]"
+              class="border border-gray-300 rounded-xl p-2 focus:ring-2 focus:ring-green-500 focus:border-green-500">
+        <option value="">Select role</option>
+        <option>Photographer</option>
+        <option>Videographer</option>
+        <option>Editor</option>
+        <option>Producer</option>
+        <option>Assistant</option>
+      </select>
+
       <a href="#" class="text-red-600 text-sm hover:underline remove-operator">Remove</a>
     `;
     select.closest("div").before(newField);
   });
 
-  // Add from manual input
+  // ✅ Add from manual input (REPLACE this whole section)
   document.getElementById("add-operator-new")?.addEventListener("click", () => {
     const input = document.getElementById("new-operator");
     const value = input.value.trim();
@@ -103,32 +130,41 @@ document.addEventListener("turbo:load", () => {
 
     const index = Date.now();
     const newField = document.createElement("div");
-    newField.classList.add("flex", "items-center", "gap-3", "mb-2");
+    newField.classList.add("flex", "items-center", "gap-3", "mb-2", "operator-field");
     newField.innerHTML = `
-      <input type="text" name="task[operators_attributes][${index}][name]" value="${value}" 
-             class="w-full border border-gray-300 rounded-xl p-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 shadow-sm">
+      <input type="text" name="task[operators_attributes][${index}][name]" value="${value}"
+             class="flex-1 border border-gray-300 rounded-xl p-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 shadow-sm">
+
+      <select name="task[operators_attributes][${index}][role]"
+              class="border border-gray-300 rounded-xl p-2 focus:ring-2 focus:ring-green-500 focus:border-green-500">
+        <option value="">Select role</option>
+        <option>Photographer</option>
+        <option>Videographer</option>
+        <option>Editor</option>
+        <option>Producer</option>
+        <option>Assistant</option>
+      </select>
+
       <a href="#" class="text-red-600 text-sm hover:underline remove-operator">Remove</a>
     `;
     input.closest("div").before(newField);
     input.value = "";
   });
 
-  // Remove operator
+  // ✅ Remove operator (keep this part, just ensure `.operator-field` class exists)
   document.addEventListener("click", (e) => {
-  if (e.target.classList.contains("remove-operator")) {
-    e.preventDefault();
-    const operatorField = e.target.closest(".operator-field");
-    const destroyInput = operatorField.querySelector(".destroy-flag");
+    if (e.target.classList.contains("remove-operator")) {
+      e.preventDefault();
+      const operatorField = e.target.closest(".operator-field");
+      const destroyInput = operatorField?.querySelector(".destroy-flag");
 
-    if (destroyInput) {
-      destroyInput.value = "1";
-      operatorField.style.display = "none"; // hide but keep in DOM for Rails
-    } else {
-      operatorField.remove(); // for newly added (unsaved) operators
+      if (destroyInput) {
+        destroyInput.value = "1";
+        operatorField.style.display = "none"; // hide but keep for Rails
+      } else {
+        operatorField.remove(); // remove unsaved ones
+      }
     }
-  }
-});
-
+  });
 });
 </script>
-
