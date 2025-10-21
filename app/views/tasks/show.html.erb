@@ -60,19 +60,39 @@
   </p>
 
   <!-- Operators Section -->
-  <div class="border-t border-gray-200 pt-4 mt-4">
-    <h3 class="text-lg font-semibold text-gray-800 mb-2">Operators</h3>
-    <% if @task.operators.any? %>
-      <ul class="list-disc list-inside text-gray-700 space-y-1">
-        <% @task.operators.each do |operator| %>
-          <li><%= operator.name %></li>
-        <% end %>
-      </ul>
-    <% else %>
-      <p class="text-gray-500 italic">No operators assigned.</p>
-    <% end %>
-  </div>
+<div class="mt-6">
+  <h3 class="text-lg font-semibold text-gray-800 mb-3">
+    Operators (<%= @task.operators.count %>)
+  </h3>
+
+  <% if @task.operators.any? %>
+    <ul class="space-y-2">
+      <% @task.operators.each do |operator| %>
+        <li class="flex justify-between items-center bg-white p-3">
+          <!-- Operator Name -->
+          <span class="font-medium text-gray-800"> •
+            <%= operator.name.presence || "Unnamed Operator" %>
+            <span class="text-gray-400" >|</span>
+            <!-- Operator Role -->
+          <% if operator.role.present? %>
+            <span class="text-sm text-green-600 font-semibold italic">
+              <%= operator.role %>
+            </span>
+          <% else %>
+            <span class="text-sm text-gray-400 italic">
+              No role assigned
+            </span>
+          <% end %>
+          </span>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="text-gray-500 italic">No operators assigned to this task yet.</p>
+  <% end %>
 </div>
+
+
 
 <!-- Comments Section -->
 <div class="max-w-3xl mx-auto mt-8">
