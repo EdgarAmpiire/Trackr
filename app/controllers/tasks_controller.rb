@@ -15,7 +15,7 @@ class TasksController < ApplicationController
 
   def new
     @task = Task.new
-    @all_operators = [ "John Doe", "Jane Smith", "Michael", "Sarah" ] # example names
+    @all_operators = [ "Bob Arinaitwe", "Sharon Kamanyire", "Solomon Tumusiime", "Edgar Ampiire", "Daniel Onen", "Derrick Mubiru", "Benjamin Bwambale", "Richard Musiitwa", "Justine Okeny", "Emma Nahurira", "Penda Agency", "Flawless" ] # same here
   end
 
   def create
