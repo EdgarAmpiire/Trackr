@@ -31,7 +31,7 @@ class TasksController < ApplicationController
   end
 
   def edit
-   @all_operators = [ "John Doe", "Jane Smith", "Michael", "Sarah" ] # same here
+   @all_operators = [ "Bob Arinaitwe", "Sharon Kamanyire", "Solomon Tumusiime", "Edgar Ampiire", "Daniel Onen", "Derrick Mubiru", "Benjamin Bwambale", "Richard Musiitwa", "Justine Okeny", "Emma Nahurira", "Penda Agency", "Flawless" ] # same here
   end
 
   def update
