@@ -70,7 +70,7 @@ class TasksController < ApplicationController
   end
 
   def set_all_operators
-    @all_operators = [ "John Doe", "Jane Smith", "Michael", "Sarah" ]
+    @all_operators = [ "Bob Arinaitwe", "Sharon Kamanyire", "Solomon Tumusiime", "Edgar Ampiire", "Daniel Onen", "Derrick Mubiru", "Benjamin Bwambale", "Richard Musiitwa", "Justine Okeny", "Emma Nahurira", "Penda Agency", "Flawless" ]
   end
 
   def task_params
