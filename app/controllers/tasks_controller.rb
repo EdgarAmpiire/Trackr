@@ -1,7 +1,7 @@
 class TasksController < ApplicationController
   before_action :authenticate_user!
   before_action :set_task, only: [ :show, :edit, :update, :destroy, :toggle_complete ]
-  before_action :set_all_operators, only: [:new, :edit, :create, :update]
+  before_action :set_all_operators, only: [ :new, :edit, :create, :update ]
 
   def index
     # All users can see all tasks, ordered by latest first
