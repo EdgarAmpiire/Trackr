@@ -26,7 +26,7 @@
     <div class="flex gap-2 items-center">
     <!-- Edit Task Button -->
     <%= link_to edit_task_path(@task),
-        class: "cursor-pointer flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm bg-blue-600 text-gray-700 hover:bg-blue-700 transition-all duration-200 shadow-sm hover:shadow-lg" do %>
+        class: "cursor-pointer flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm bg-blue-600 text-black hover:bg-blue-700 transition-all duration-200 shadow-sm hover:shadow-lg" do %>
       <%= raw <<~SVG
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6 text-yellow-500">
       <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
@@ -43,7 +43,7 @@
         method: :patch,
         form: { data: { turbo_stream: true } },
         class: "cursor-pointer flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 shadow-sm
-                #{@task.completed ? 'bg-green-600 text-white hover:bg-green-700' : ' text-gray-700 hover:shadow-lg'}" do %>
+                #{@task.completed ? 'bg-green-600 text-white hover:bg-green-700' : ' text-black hover:shadow-lg'}" do %>
     
       <%= raw('<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-5 h-5" viewBox="0 0 24 24">
                 <path fill-rule="evenodd" d="M9 1.5H5.625c-1.036 0-1.875.84-1.875 

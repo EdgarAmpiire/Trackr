@@ -76,11 +76,17 @@
 </div>
 
 
-  <!-- Submit -->
-  <div>
+    <!-- Submit & Cancel -->
+  <div class="flex gap-3">
     <%= form.submit task.persisted? ? "Update Task" : "Create Task",
-  class: "cursor-pointer bg-green-600 text-white px-5 py-2 rounded-xl font-semibold hover:bg-green-700 transition-all duration-200 shadow-md" %>
- </div>
+      class: "cursor-pointer bg-green-600 text-white px-5 py-2 rounded-xl font-semibold hover:bg-green-700 transition-all duration-200 shadow-md" %>
+
+    <%= link_to (task.persisted? ? task_path(task) : tasks_path),
+        class: "bg-gray-200 text-gray-700 px-5 py-2 rounded-xl font-semibold hover:bg-gray-300 transition-all duration-200 shadow-md flex items-center justify-center", data: { turbo: false } do %>
+      Cancel
+    <% end %>
+  </div>
+
 <% end %>
 
 <!-- Stimulus/JS helper for dynamically adding operator fields -->
