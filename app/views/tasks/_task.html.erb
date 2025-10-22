@@ -1,10 +1,23 @@
 <%= turbo_frame_tag dom_id(task) do %>
   <div class="bg-white rounded-2xl shadow-md p-6 flex justify-between items-center hover:shadow-lg transition-shadow duration-300 border border-gray-100">
     <div class="flex flex-col gap-2">
-      <!-- Task title -->
-      <h3 class="text-lg font-semibold <%= 'line-through text-gray-400' if task.completed %>">
-        <%= link_to task.title, task_path(task), data: { turbo_frame: "_top" }, class: "hover:text-green-600 transition-colors duration-200" %>
-      </h3>
+      <!-- Task title + scheduled date -->
+<div class="flex items-center gap-3 flex-wrap">
+  <h3 class="text-lg font-semibold <%= 'line-through text-gray-400' if task.completed %>">
+    <%= link_to task.title, task_path(task), data: { turbo_frame: "_top" }, class: "hover:text-green-600 transition-colors duration-200" %>
+  </h3>
+
+  <% if task.scheduled_for.present? %>
+    <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+      🗓️ Scheduled for: <%= task.scheduled_for.strftime("%b %d, %Y %I:%M %p") %>
+    </span>
+  <% else %>
+    <span class="text-sm text-gray-400 italic">
+      🗓️ No date set
+    </span>
+  <% end %>
+</div>
+
 
       <!-- Task description -->
       <% if task.description.present? %>

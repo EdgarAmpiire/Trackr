@@ -11,15 +11,26 @@
 
 <!-- Task Card -->
 <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-md p-6 mt-6 border border-gray-100">
-    <!-- Scheduled Date -->
+   
+<!-- Scheduled Date -->
 <% if @task.scheduled_for.present? %>
-  <p class="text-gray-600 mb-4">
-    <strong class="text-gray-800">Scheduled For:</strong>
-    <%= @task.scheduled_for.strftime("%A, %d %B %Y at %I:%M %p") %>
-  </p>
+  <div class="mb-4">
+    <p class="text-gray-600">
+      <strong class="text-gray-800">🗓️ Scheduled For:</strong>
+      <%= @task.scheduled_for.strftime("%A, %d %B %Y at %I:%M %p") %>
+    </p>
+    <!-- Separator line -->
+    <div class="border-b border-gray-700 mt-3"></div>
+  </div>
 <% else %>
-  <p class="text-gray-500 italic mb-4">No scheduled date set.</p>
+  <div class="mb-4">
+    <p class="text-gray-500 italic">No scheduled date set.</p>
+    <!-- Separator line -->
+    <div class="border-b border-gray-700 mt-3"></div>
+  </div>
 <% end %>
+
+
   <!-- Task Header -->
   <div class="flex justify-between items-center mb-4">
     <div>
