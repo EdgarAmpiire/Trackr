@@ -11,6 +11,15 @@
 
 <!-- Task Card -->
 <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-md p-6 mt-6 border border-gray-100">
+    <!-- Scheduled Date -->
+<% if @task.scheduled_for.present? %>
+  <p class="text-gray-600 mb-4">
+    <strong class="text-gray-800">Scheduled For:</strong>
+    <%= @task.scheduled_for.strftime("%A, %d %B %Y at %I:%M %p") %>
+  </p>
+<% else %>
+  <p class="text-gray-500 italic mb-4">No scheduled date set.</p>
+<% end %>
   <!-- Task Header -->
   <div class="flex justify-between items-center mb-4">
     <div>
@@ -74,6 +83,7 @@
   <p class="text-gray-700 leading-relaxed mb-4 border-l-4 border-green-500 pl-4">
     <%= @task.description.presence || "No description provided." %>
   </p>
+
 
   <!-- Operators Section -->
 <div class="mt-6">
