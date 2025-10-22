@@ -6,6 +6,7 @@ class Task < ApplicationRecord
   accepts_nested_attributes_for :operators, allow_destroy: true
 
   validates :title, presence: true
+  validates :scheduled_for, presence: true
 
   after_initialize :set_default_completed, if: :new_record?
 
